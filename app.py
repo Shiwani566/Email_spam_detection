@@ -1,4 +1,4 @@
-from flask import Flask
+from flask import Flask, render_template, request
 import pickle
 
 
@@ -31,7 +31,7 @@ with open("model/vectorizer.pkl", "rb") as file:
 
 @app.route("/")
 def home():
-    return "Email Spam Detection App is Running!"
+    return render_template("index.html")
 
 
 # =========================
@@ -41,7 +41,7 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
 
-    message = "Congratulations! You have won a free prize!"
+    message = request.form["message"]
 
     message_vectorized = vectorizer.transform([message])
 
