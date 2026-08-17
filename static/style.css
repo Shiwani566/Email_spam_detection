@@ -4,61 +4,332 @@
     padding: 0;
 }
 
+
 body {
     font-family: Arial, sans-serif;
-    background: #f4f6f8;
+
+    background:
+        linear-gradient(
+            135deg,
+            #eef2ff,
+            #fdf2f8
+        );
+
     min-height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 
-.container {
-    width: 90%;
-    max-width: 700px;
-    background: white;
-    padding: 40px;
-    border-radius: 12px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+
+.page {
+    width: 92%;
+    max-width: 850px;
+
+    margin: auto;
+
+    padding: 45px 0;
+}
+
+
+/* =========================
+   HERO
+========================= */
+
+.hero {
     text-align: center;
+
+    margin-bottom: 30px;
 }
 
-h1 {
+
+.icon {
+    font-size: 50px;
+
     margin-bottom: 10px;
 }
 
-.subtitle {
-    color: #666;
-    margin-bottom: 25px;
+
+.hero h1 {
+    font-size: 38px;
+
+    color: #312e81;
+
+    margin-bottom: 10px;
 }
 
-textarea {
+
+.hero p {
+    color: #64748b;
+
+    font-size: 17px;
+}
+
+
+/* =========================
+   MAIN CARD
+========================= */
+
+.card {
+    background: white;
+
+    padding: 35px;
+
+    border-radius: 18px;
+
+    box-shadow:
+        0 10px 35px
+        rgba(49, 46, 129, 0.12);
+}
+
+
+/* =========================
+   FORM
+========================= */
+
+label {
+    display: block;
+
+    margin-bottom: 8px;
+    margin-top: 18px;
+
+    font-weight: bold;
+
+    color: #334155;
+}
+
+
+input,
+select {
     width: 100%;
-    min-height: 220px;
-    padding: 15px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    resize: vertical;
-    font-size: 16px;
-    font-family: Arial, sans-serif;
+
+    padding: 14px;
+
+    border: 2px solid #e2e8f0;
+
+    border-radius: 10px;
+
+    font-size: 15px;
+
+    background: white;
 }
 
-textarea:focus {
+
+input:focus,
+select:focus {
+
     outline: none;
-    border-color: #333;
+
+    border-color: #6366f1;
 }
+
 
 button {
-    margin-top: 20px;
-    padding: 12px 25px;
+
+    width: 100%;
+
+    margin-top: 25px;
+
+    padding: 14px;
+
     border: none;
-    border-radius: 8px;
-    background: #333;
+
+    border-radius: 10px;
+
+    background:
+        linear-gradient(
+            90deg,
+            #6366f1,
+            #8b5cf6
+        );
+
     color: white;
+
     font-size: 16px;
+
+    font-weight: bold;
+
     cursor: pointer;
+
+    transition: 0.2s;
 }
 
+
 button:hover {
-    background: #555;
+
+    transform: translateY(-2px);
+
+    box-shadow:
+        0 8px 20px
+        rgba(99, 102, 241, 0.3);
+}
+
+
+/* =========================
+   SECURITY NOTE
+========================= */
+
+.security-note {
+
+    text-align: center;
+
+    margin-top: 20px;
+
+    font-size: 13px;
+
+    color: #64748b;
+}
+
+
+/* =========================
+   RESULTS
+========================= */
+
+.results-container {
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 18px;
+}
+
+
+.email-card {
+
+    background: white;
+
+    border-radius: 16px;
+
+    padding: 22px;
+
+    box-shadow:
+        0 8px 25px
+        rgba(0, 0, 0, 0.08);
+
+    border-left: 5px solid #6366f1;
+}
+
+
+.email-header {
+
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    margin-bottom: 18px;
+
+    font-weight: bold;
+
+    color: #475569;
+}
+
+
+.badge {
+
+    padding: 7px 12px;
+
+    border-radius: 20px;
+
+    font-size: 13px;
+
+    font-weight: bold;
+}
+
+
+.badge.spam {
+
+    background: #fee2e2;
+
+    color: #dc2626;
+}
+
+
+.badge.safe {
+
+    background: #dcfce7;
+
+    color: #16a34a;
+}
+
+
+.email-content h3 {
+
+    color: #1e293b;
+
+    margin-bottom: 10px;
+
+    word-break: break-word;
+}
+
+
+.email-content p {
+
+    color: #64748b;
+
+    line-height: 1.6;
+
+    white-space: pre-wrap;
+
+    word-break: break-word;
+
+    max-height: 250px;
+
+    overflow-y: auto;
+}
+
+
+/* =========================
+   BACK BUTTON
+========================= */
+
+.back-link {
+
+    display: block;
+
+    margin-top: 25px;
+
+    text-decoration: none;
+}
+
+
+.back-link button {
+
+    background:
+        linear-gradient(
+            90deg,
+            #475569,
+            #64748b
+        );
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .page {
+        padding: 25px 0;
+    }
+
+
+    .hero h1 {
+        font-size: 30px;
+    }
+
+
+    .card {
+        padding: 25px;
+    }
+
+
+    .email-header {
+        align-items: flex-start;
+
+        gap: 10px;
+
+        flex-direction: column;
+    }
+
 }

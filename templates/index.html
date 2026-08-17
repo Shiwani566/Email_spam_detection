@@ -1,39 +1,121 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Email Spam Detection</title>
+    <meta name="viewport"
+          content="width=device-width, initial-scale=1.0">
 
-    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Email Spam Detector</title>
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='style.css') }}">
+
 </head>
+
 
 <body>
 
-    <div class="container">
+    <div class="page">
 
-        <h1>Email Spam Detection</h1>
+        <div class="hero">
 
-        <p class="subtitle">
-            Enter an email message to check whether it is spam or not.
-        </p>
+            <div class="icon">
+                📧
+            </div>
 
-        <form action="/predict" method="POST">
+            <h1>Email Spam Detector</h1>
 
-            <textarea
-                name="message"
-                placeholder="Enter your email message here..."
-                required
-            ></textarea>
+            <p>
+                Detect spam emails using Machine Learning
+            </p>
 
-            <button type="submit">
-                Check Email
-            </button>
+        </div>
 
-        </form>
+
+        <div class="card">
+
+            <form
+                action="/check-gmail"
+                method="POST"
+            >
+
+                <label for="email_address">
+                    Gmail Address
+                </label>
+
+                <input
+                    type="email"
+                    id="email_address"
+                    name="email_address"
+                    placeholder="example@gmail.com"
+                    required
+                >
+
+
+                <label for="app_password">
+                    Gmail App Password
+                </label>
+
+                <input
+                    type="password"
+                    id="app_password"
+                    name="app_password"
+                    placeholder="Enter your App Password"
+                    required
+                >
+
+
+                <label for="email_count">
+                    Number of emails to check
+                </label>
+
+                <select
+                    id="email_count"
+                    name="email_count"
+                >
+
+                    <option value="5">
+                        Latest 5 Emails
+                    </option>
+
+                    <option value="10">
+                        Latest 10 Emails
+                    </option>
+
+                    <option value="15">
+                        Latest 15 Emails
+                    </option>
+
+                    <option value="20">
+                        Latest 20 Emails
+                    </option>
+
+                </select>
+
+
+                <button type="submit">
+
+                    🔍 Check Emails
+
+                </button>
+
+            </form>
+
+
+            <p class="security-note">
+
+                🔒 Your App Password is used only
+                for this check and is not stored.
+
+            </p>
+
+        </div>
 
     </div>
 
 </body>
+
 </html>
