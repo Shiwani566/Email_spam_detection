@@ -5,40 +5,37 @@ import email
 from email.header import decode_header
 
 
-
-# CREATE FLASK APP
-
-
 app = Flask(__name__)
 
 
-
+# =========================
 # LOAD ML MODEL
-
+# =========================
 
 with open("model/spam_model.pkl", "rb") as file:
     model = pickle.load(file)
 
 
-
+# =========================
 # LOAD VECTORIZER
-
+# =========================
 
 with open("model/vectorizer.pkl", "rb") as file:
     vectorizer = pickle.load(file)
 
 
-
+# =========================
 # HOME PAGE
-
+# =========================
 
 @app.route("/")
 def home():
     return render_template("index.html")
 
 
-
+# =========================
 # MANUAL MESSAGE PREDICTION
+# =========================
 
 @app.route("/predict", methods=["POST"])
 def predict():
@@ -60,9 +57,9 @@ def predict():
     return result
 
 
-
-# DECODE SUBJECT
-
+# =========================
+# DECODE EMAIL SUBJECT
+# =========================
 
 def get_subject(msg):
 
@@ -98,9 +95,9 @@ def get_subject(msg):
         return str(subject)
 
 
-
+# =========================
 # GET EMAIL BODY
-
+# =========================
 
 def get_body(msg):
 
@@ -179,9 +176,9 @@ def get_body(msg):
     return body
 
 
-
+# =========================
 # FETCH MULTIPLE EMAILS
-
+# =========================
 
 def fetch_emails(
     email_address,
@@ -197,30 +194,19 @@ def fetch_emails(
 
     try:
 
-        
-        # LOGIN
-        
-
+        # Login
         mail.login(
             email_address,
             app_password
         )
 
-
-        
-        # OPEN INBOX
-        
-
+        # Open Inbox
         status, _ = mail.select("INBOX")
 
         if status != "OK":
             return []
 
-
-        
-        # GET EMAIL IDS
-        
-
+        # Search emails
         status, messages = mail.search(
             None,
             "ALL"
@@ -229,27 +215,18 @@ def fetch_emails(
         if status != "OK":
             return []
 
-
         email_ids = messages[0].split()
 
         if not email_ids:
             return []
 
-
-        
-        # GET LATEST N EMAILS
-        
-
+        # Get latest N emails
         latest_ids = email_ids[-email_count:]
 
-        # Newest email first
+        # Newest first
         latest_ids = latest_ids[::-1]
 
-
-        
-        # PROCESS EACH EMAIL
-        
-
+        # Process emails
         for email_id in latest_ids:
 
             try:
@@ -262,11 +239,6 @@ def fetch_emails(
                 if status != "OK":
                     continue
 
-
-                
-                # FIND EMAIL DATA
-                
-
                 raw_email = None
 
                 for item in msg_data:
@@ -277,47 +249,26 @@ def fetch_emails(
 
                         break
 
-
                 if not raw_email:
                     continue
 
-
-                
-                # CREATE EMAIL OBJECT
-                
-
+                # Create email object
                 msg = email.message_from_bytes(
                     raw_email
                 )
 
-
-                
-                # SUBJECT
-                
-
+                # Subject
                 subject = get_subject(msg)
 
-
-                
-                # BODY
-                
-
+                # Body
                 body = get_body(msg)
 
-
-                
-                # COMBINE SUBJECT + BODY
-                
-
+                # Combine subject + body
                 email_text = (
                     subject + " " + body
                 )
 
-
-                
-                # ML PREDICTION
-                
-
+                # ML prediction
                 email_vectorized = vectorizer.transform(
                     [email_text]
                 )
@@ -326,35 +277,19 @@ def fetch_emails(
                     email_vectorized
                 )[0]
 
-
                 if prediction == 1:
-
                     result = "SPAM"
-
                 else:
-
                     result = "NOT SPAM"
 
-
-                
-                # SAVE RESULT
-                
-
+                # Store result
                 results.append({
-
                     "subject": subject,
-
                     "body": body,
-
                     "result": result
-
                 })
 
-
             except Exception as error:
-
-                # If one email has a problem,
-                # continue with the next email.
 
                 print(
                     "Skipped email:",
@@ -363,24 +298,19 @@ def fetch_emails(
 
                 continue
 
-
         return results
-
 
     finally:
 
         try:
-
             mail.logout()
-
         except Exception:
-
             pass
 
 
-
+# =========================
 # CHECK GMAIL
-
+# =========================
 
 @app.route(
     "/check-gmail",
@@ -388,10 +318,7 @@ def fetch_emails(
 )
 def check_gmail():
 
-    
-    # GET USER INPUT
-    
-
+    # Get user input
     email_address = request.form.get(
         "email_address",
         ""
@@ -408,47 +335,41 @@ def check_gmail():
     )
 
 
-    
-    # VALIDATE INPUT
-   
-
+    # Validate email
     if not email_address:
 
         return """
         <h2>Gmail Address Missing</h2>
+
         <p>Please enter your Gmail address.</p>
+
         <a href="/">Go Back</a>
         """
 
 
+    # Validate password
     if not app_password:
 
         return """
         <h2>App Password Missing</h2>
+
         <p>Please enter your Gmail App Password.</p>
+
         <a href="/">Go Back</a>
         """
 
 
-    
-    # CONVERT EMAIL COUNT
-    
-
+    # Convert count to integer
     try:
 
-        email_count = int(
-            email_count
-        )
+        email_count = int(email_count)
 
     except ValueError:
 
         email_count = 5
 
 
-    
-    # ALLOWED OPTIONS
-    
-
+    # Allowed email counts
     allowed_counts = [
         5,
         10,
@@ -456,16 +377,12 @@ def check_gmail():
         20
     ]
 
-
     if email_count not in allowed_counts:
 
         email_count = 5
 
 
-    
-    # FETCH EMAILS
-    
-
+    # Fetch emails
     try:
 
         emails = fetch_emails(
@@ -473,7 +390,6 @@ def check_gmail():
             app_password,
             email_count
         )
-
 
     except imaplib.IMAP4.error:
 
@@ -485,14 +401,8 @@ def check_gmail():
         and App Password.
         </p>
 
-        <p>
-        Make sure IMAP access is available
-        for your Gmail account.
-        </p>
-
         <a href="/">Go Back</a>
         """
-
 
     except Exception as error:
 
@@ -512,10 +422,7 @@ def check_gmail():
         """
 
 
-    
-    # NO EMAILS
-    
-
+    # No emails
     if not emails:
 
         return """
@@ -530,18 +437,39 @@ def check_gmail():
         """
 
 
-   
-    # SHOW RESULTS
-   
+    # =========================
+    # CALCULATE SUMMARY
+    # =========================
 
-    return render_template(
-        "result.html",
-        emails=emails
+    spam_count = sum(
+        1
+        for item in emails
+        if item["result"] == "SPAM"
+    )
+
+    not_spam_count = sum(
+        1
+        for item in emails
+        if item["result"] == "NOT SPAM"
     )
 
 
-# RUN APPLICATION
+    # =========================
+    # SHOW RESULTS
+    # =========================
 
+    return render_template(
+        "result.html",
+        emails=emails,
+        total_count=len(emails),
+        spam_count=spam_count,
+        not_spam_count=not_spam_count
+    )
+
+
+# =========================
+# RUN APPLICATION
+# =========================
 
 if __name__ == "__main__":
 

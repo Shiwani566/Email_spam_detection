@@ -37,10 +37,7 @@
 
         <div class="card">
 
-            <form
-                action="/check-gmail"
-                method="POST"
-            >
+            <form id="emailForm" action="/check-gmail" method="POST">
 
                 <label for="email_address">
                     Gmail Address
@@ -55,17 +52,29 @@
                 >
 
 
-                <label for="app_password">
-                    Gmail App Password
-                </label>
+       <label for="app_password">
+    Gmail App Password
+</label>
 
-                <input
-                    type="password"
-                    id="app_password"
-                    name="app_password"
-                    placeholder="Enter your App Password"
-                    required
-                >
+<div class="password-box">
+
+    <input
+        type="password"
+        id="app_password"
+        name="app_password"
+        placeholder="Enter your App Password"
+        required
+    >
+
+    <button
+        type="button"
+        id="togglePassword"
+        class="password-toggle"
+    >
+        👁️
+    </button>
+
+</div>
 
 
                 <label for="email_count">
@@ -96,11 +105,12 @@
                 </select>
 
 
-                <button type="submit">
-
-                    🔍 Check Emails
-
-                </button>
+               <button
+    type="submit"
+    id="checkButton"
+>
+    🔍 Check Emails
+</button>
 
             </form>
 
@@ -115,6 +125,8 @@
         </div>
 
     </div>
+
+    <script src="{{ url_for('static', filename='script.js') }}"></script>
 
 </body>
 
