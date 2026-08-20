@@ -1,45 +1,20 @@
 import pandas as pd
 import pickle
-import os
 
 from sklearn.model_selection import train_test_split
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.naive_bayes import MultinomialNB
-from sklearn.metrics import accuracy_score
+from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score
 
 
-# =========================
-# 1. LOAD DATASET
-# =========================
+# Load new email dataset
+df = pd.read_csv("dataset/email_dataset.csv")
 
-data = pd.read_csv("dataset/spam.csv", encoding="latin-1")
-
-# Keep only the required columns
-data = data[["v1", "v2"]]
-
-# Rename columns
-data.columns = ["label", "message"]
+X = df["text"]
+y = df["label"]
 
 
-# =========================
-# 2. CONVERT LABELS
-# =========================
-
-# ham = 0
-# spam = 1
-data["label"] = data["label"].map({
-    "ham": 0,
-    "spam": 1
-})
-
-
-# =========================
-# 3. SPLIT DATA
-# =========================
-
-X = data["message"]
-y = data["label"]
-
+# Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
     X,
     y,
@@ -49,59 +24,46 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 
-# =========================
-# 4. TEXT VECTORIZATION
-# =========================
-
-vectorizer = CountVectorizer()
+# Convert text into numerical features
+vectorizer = CountVectorizer(
+    stop_words="english"
+)
 
 X_train_vectorized = vectorizer.fit_transform(X_train)
 X_test_vectorized = vectorizer.transform(X_test)
 
 
-# =========================
-# 5. TRAIN MODEL
-# =========================
-
+# Train model
 model = MultinomialNB()
-
 model.fit(X_train_vectorized, y_train)
 
 
-# =========================
-# 6. TEST MODEL
-# =========================
-
+# Predictions
 y_pred = model.predict(X_test_vectorized)
 
+
+# Evaluation
 accuracy = accuracy_score(y_test, y_pred)
-
-print("Model trained successfully!")
-print(f"Accuracy: {accuracy * 100:.2f}%")
-
-
-# =========================
-# 7. CREATE MODEL FOLDER
-# =========================
-
-os.makedirs("model", exist_ok=True)
+precision = precision_score(y_test, y_pred)
+recall = recall_score(y_test, y_pred)
+f1 = f1_score(y_test, y_pred)
 
 
-# =========================
-# 8. SAVE MODEL
-# =========================
-
-with open("model/spam_model.pkl", "wb") as file:
-    pickle.dump(model, file)
-
-
-# =========================
-# 9. SAVE VECTORIZER
-# =========================
-
-with open("model/vectorizer.pkl", "wb") as file:
-    pickle.dump(vectorizer, file)
+print("\nModel Evaluation")
+print("----------------")
+print(f"Accuracy : {accuracy:.4f}")
+print(f"Precision: {precision:.4f}")
+print(f"Recall   : {recall:.4f}")
+print(f"F1 Score : {f1:.4f}")
 
 
-print("Model saved to: model/spam_model.pkl")
-print("Vectorizer saved to: model/vectorizer.pkl")
+# Save model
+with open("model/spam_model.pkl", "wb") as f:
+    pickle.dump(model, f)
+
+# Save vectorizer
+with open("model/vectorizer.pkl", "wb") as f:
+    pickle.dump(vectorizer, f)
+
+
+print("\nModel and vectorizer saved successfully!")

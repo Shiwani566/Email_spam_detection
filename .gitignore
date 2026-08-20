@@ -2,3 +2,9 @@ venv/
 __pycache__/
 *.pyc
 .env
+
+# SpamAssassin raw dataset
+dataset/easy-ham/
+dataset/hard-ham/
+dataset/spam/
+dataset/*.tar.bz2
